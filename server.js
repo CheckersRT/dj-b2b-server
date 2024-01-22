@@ -3,15 +3,20 @@ import * as http from "http";
 import { Server } from "socket.io";
 import cors from "cors";
 import jsmediatags from "jsmediatags";
-import {xml2js} from "xml-js"
+import { xml2js } from "xml-js";
 import { readFileSync } from "fs";
-
+import bodyParser from "body-parser";
+import fs from "fs";
+import getTrackFromJSON from "./utils/getTrackfromJSON.js";
+import cloudinary from "cloudinary"
+import uploadToCloudinary from "./utils/uploadToCloudinary.js";
 
 const app = express();
 const PORT = process.env.PORT || 3030;
 app.use(cors());
-app.use(express.json());
-
+app.use(express.json({
+  limit: '50mb'
+}));
 
 const server = http.createServer(app);
 
@@ -46,13 +51,9 @@ io.on("connection", (socket) => {
   });
 });
 
-
-
 app.post("/loadTrack", (request, response) => {
   const fileName = request.body.name;
-  console.log(fileName)
-
-
+  console.log(fileName);
 });
 
 app.post("/metadata", (request, response) => {
@@ -61,7 +62,7 @@ app.post("/metadata", (request, response) => {
   jsmediatags.read(request.body.url, {
     onSuccess: function (tag) {
       const tags = tag.tags;
-      console.log(tag)
+      console.log(tag);
       //Create a buffer, stringify it and format it to a data url.
       const art = `data:${tags.picture.format};base64,${Buffer.from(
         tags.picture.data
@@ -82,41 +83,90 @@ app.post("/metadata", (request, response) => {
   });
 });
 
+app.post(
+  "/saveXML",
+  bodyParser.raw({
+    type: "text/xml",
+    limit: "5mb",
+  }),
+  (request, response) => {
+    // const xmlFile = request.body.file
+    console.log(request.body);
 
-app.post("/getPlaylists", (request, response) => {
-  // const xmlFile = request.body.file
-  var xml = readFileSync('/Users/Checkers/Documents/spiced/dj-b2b-server/public/rekordbox.xml', 'utf8');
-  var options = {ignoreComment: true, alwaysChildren: true};
+    fs.writeFile("public/rekordboxTEST.xml", request.body, (error) => {
+      if (error) console.log("Error writing file : ", error);
+    });
+
+
+    response.status(200).json({message: "success"})
+  }
+);
+
+app.get("/getPlaylists", (request, response) => {
+  var xml = readFileSync(
+    "/Users/Checkers/Documents/spiced/dj-b2b-server/public/rekordboxTEST.xml",
+    "utf8"
+  );
+  var options = { ignoreComment: true, alwaysChildren: true };
   var result = xml2js(xml, options); // or convert.xml2json(xml, options)
-  console.log(result)
-  const playlists = result.elements[0].elements[2].elements[0].elements
-  
-  console.log("Playlists: ", playlists)
-  
-  const playlistsArray = playlists.map((playlist) => playlist.attributes.Name)
-  console.log(playlistsArray)
+  console.log(result);
 
-  response.json(playlistsArray)
+  const resultJSON = JSON.stringify(result)
+
+  fs.writeFile("public/rekordboxJSON.json", resultJSON, (error) => {
+    if (error) console.log("Error writing file : ", error);
+  });
+
+  const playlists = result.elements[0].elements[2].elements[0].elements;
+
+  console.log("Playlists: ", playlists);
+
+  const playlistsArray = playlists.map((playlist) => playlist);
+  console.log(playlistsArray);
+
+  response.json(playlistsArray);
+});
+
+app.post("/getTracksInPlaylist", (request, response) => {
+  console.log(request.body.playlistName)
+  const playlistName = request.body.playlistName
+
+  const rekordboxFile = readFileSync("/Users/Checkers/Documents/spiced/dj-b2b-server/public/rekordboxJSON.json")
+  const rekordboxJSON = JSON.parse(rekordboxFile)
+  const playlists = rekordboxJSON.elements[0].elements[2].elements[0].elements
+  const playlistToGet = playlists.find((playlist) => playlist.attributes.Name === playlistName)
+  console.log(playlistToGet)
+  const tracksInPlaylist = playlistToGet.elements.map((track) => track.elements)
+  const trackKeys = tracksInPlaylist[0].map((track) => track.attributes.Key)
+  const collection = rekordboxJSON.elements[0].elements[1].elements
+  const trackList = []
+  for(let i = 0; i < trackKeys.length; i++) {
+    const track = collection.find((track) => track.attributes.TrackID === trackKeys[i])
+    const trackName = track.attributes.Name
+    trackList.push(trackName)
+  }
+
+  const playlistObj = {
+    playlistName: playlistName,
+    trackList: trackList,
+  }
+
+  response.json(playlistObj)
+
 })
 
-// var element = result.elements.find((entry) => entry.name === "PLAYLISTS")
+app.post("/uploadTrack", (request, response) => {
+  const trackName = request.body.trackName
+  const track = getTrackFromJSON(trackName)
+  const location = track.Location
+  const trackPathNoSpace = decodeURI(location).slice(16)
+  console.log(trackPathNoSpace)
+  const result = uploadToCloudinary(trackPathNoSpace)
+  console.log(result)
 
-// console.log(result.elements[0].elements[2].elements[0].elements[0])
-
-
-// const tracklist = playlist1.elements[0].elements.map((track) => track.attributes.Key)
-// console.log(tracklist)
-
-// const collection = result.elements[0].elements[1]
-// console.log(collection)
-
-// const track = collection.elements[0]
-// console.log(track)
-// element.forEach((element) => {
-  // element.elements
-// console.log(result);
-// const result = getMetaDataFromFile(trackUri);
-// console.log("Result: ", result);
+  response.json(result)
+  
+})
 
 // var picture = tags.tags.picture; // create reference to track art
 // var base64String = "";
