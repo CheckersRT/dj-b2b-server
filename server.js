@@ -83,15 +83,37 @@ app.post("/metadata", (request, response) => {
 });
 
 
-var xml = readFileSync('/Users/Checkers/Documents/spiced/dj-b2b-server/public/rekordbox.xml', 'utf8');
-var options = {ignoreComment: true, alwaysChildren: true};
-var result = xml2js(xml, options); // or convert.xml2json(xml, options)
-var element = result.elements.forEach((element) => {
-  console.log("elements:", element)
+app.post("/getPlaylists", (request, response) => {
+  // const xmlFile = request.body.file
+  var xml = readFileSync('/Users/Checkers/Documents/spiced/dj-b2b-server/public/rekordbox.xml', 'utf8');
+  var options = {ignoreComment: true, alwaysChildren: true};
+  var result = xml2js(xml, options); // or convert.xml2json(xml, options)
+  console.log(result)
+  const playlists = result.elements[0].elements[2].elements[0].elements
+  
+  console.log("Playlists: ", playlists)
+  
+  const playlistsArray = playlists.map((playlist) => playlist.attributes.Name)
+  console.log(playlistsArray)
+
+  response.json(playlistsArray)
 })
-element.forEach((element) => {
+
+// var element = result.elements.find((entry) => entry.name === "PLAYLISTS")
+
+// console.log(result.elements[0].elements[2].elements[0].elements[0])
+
+
+// const tracklist = playlist1.elements[0].elements.map((track) => track.attributes.Key)
+// console.log(tracklist)
+
+// const collection = result.elements[0].elements[1]
+// console.log(collection)
+
+// const track = collection.elements[0]
+// console.log(track)
+// element.forEach((element) => {
   // element.elements
-})
 // console.log(result);
 // const result = getMetaDataFromFile(trackUri);
 // console.log("Result: ", result);
