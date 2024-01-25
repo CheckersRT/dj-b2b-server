@@ -5,7 +5,7 @@ const router = express.Router()
 
 router.post("/", async (request, response) => {
     const metaData = request.body.metaData
-    console.log(metaData)
+    console.log("Metadata from request body: ", metaData)
     const track = new Track(metaData);
       track.save().then(
         () => console.log("One entry added"),

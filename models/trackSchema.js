@@ -29,6 +29,8 @@ const trackSchema = new Schema({
     label: {type: String, required: true},
     mix: {type: String, required: false},
     url: {type: String, required: true},
+    publicID: {type: String, required: true},
+    waveformURL: {type: String, required: true},
 });
 
 
