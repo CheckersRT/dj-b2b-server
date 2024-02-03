@@ -14,9 +14,16 @@ router.post("/", async (request, response) => {
     const location = track.Location;
     const trackPathNoSpace = decodeURI(location).slice(16);
     console.log(trackPathNoSpace);
-    const data = await uploadToCloudinary(trackPathNoSpace);
-    console.log("data from upload function", data);
-    response.json(data)
+
+    try {
+      
+      const data = await uploadToCloudinary(trackPathNoSpace);
+      console.log("data from upload function", data);
+      response.json(data)
+    } catch (error) {
+      console.log("error from trackupload: ", error)
+      
+    }
   }
   
 //   , (request, response, next) => {
