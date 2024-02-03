@@ -1,17 +1,18 @@
 import Track from "../models/trackSchema.js";
-import express from "express"
+import express from "express";
 
-const router = express.Router()
+const router = express.Router();
 
 router.post("/", async (request, response) => {
-    const metaData = request.body.metaData
-    console.log("Metadata from request body: ", metaData)
+  try {
+    const metaData = request.body.metaData;
+    console.log("Metadata from request body: ", metaData);
     const track = new Track(metaData);
-      track.save().then(
-        () => console.log("One entry added"),
-        (error) => console.log(error)
-      );
+    track.save();
+    console.log("One entry added");
+  } catch (error) {
+    console.log("Error from saveToDb: ", error);
+  }
+});
 
-})
-
-export default router
+export default router;

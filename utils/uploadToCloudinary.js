@@ -27,6 +27,8 @@ export default async function uploadToCloudinary(trackPath) {
       console.log("Result from try catch: ", result);
       return result;
     } catch (error) {
-      console.error(error);
+      console.error("Error from uploadToCloudinary", error);
+      return "No such file or directory"
     }
+    
 };

@@ -5,7 +5,6 @@ import cors from "cors";
 import jsmediatags from "jsmediatags";
 import { xml2js } from "xml-js";
 import { readFileSync } from "fs";
-import bodyParser from "body-parser";
 import fs from "fs";
 import uploadToCloudinary from "./utils/uploadToCloudinary.js";
 import mongoose from "mongoose";
@@ -15,6 +14,7 @@ import uploadTrack from "./routes/uploadTrack.js";
 import saveToDb from "./routes/saveToDb.js";
 import getMetaData from "./routes/getMetaData.js";
 import isTrackInDb from "./routes/isTrackInDb.js"
+import saveXML from "./routes/saveXML.js"
 
 const app = express();
 const PORT = process.env.PORT || 3030;
@@ -93,27 +93,12 @@ app.post("/metadata", (request, response) => {
   });
 });
 
-app.post(
-  "/saveXML",
-  bodyParser.raw({
-    type: "text/xml",
-    limit: "5mb",
-  }),
-  (request, response) => {
-    // const xmlFile = request.body.file
-    console.log(request.body);
+app.use("/routes/saveXML", saveXML)
 
-    fs.writeFile("public/rekordboxTEST.xml", request.body, (error) => {
-      if (error) console.log("Error writing file : ", error);
-    });
-
-    response.status(200).json({ message: "success" });
-  }
-);
 
 app.get("/getPlaylists", (request, response) => {
   var xml = readFileSync(
-    "/Users/Checkers/Documents/spiced/dj-b2b-server/public/rekordboxTEST.xml",
+    "/Users/Checkers/Documents/spiced/dj-b2b-server/public/userRekordbox.xml",
     "utf8"
   );
   var options = { ignoreComment: true, alwaysChildren: true };
