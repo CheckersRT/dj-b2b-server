@@ -1,25 +1,28 @@
-// import express from "express";
-// import Track from "../models/trackSchema.js";
-// import mongoose from "mongoose";
+import express from "express";
+import Track from "../models/trackSchema.js";
+import mongoose from "mongoose";
 
-// mongoose.connect(process.env.MONGODB_URI);
+mongoose.connect(process.env.MONGODB_URI);
 
-// const router = express.Router();
+const router = express.Router();
 
-// router.post("/", async (request, response) => {
-//   const id = request.body.id;
-//   const track = await Track.find({ trackID: id });
+router.post("/", async (request, response) => {
+    const id = request.body.id;
+    console.log("ID: ", id);
 
-//   if(!track) {
-//     console.log("NO TRACK")
-//   }
-//   console.log(track)
+    try {
+        const track = await Track.find({ trackID: id });
+      
+        if (track.length === 0) {
+          console.log("NO TRACK");
+          response.json({ message: "no track in Db" });
+        } else {
+          response.json({ track: track[0] });
+        }
+    } catch (error) {
+        console.log("Error in isTrackInDb: ", error)
+    }
 
-// });
+  });
 
-// export default router
-
-// // app.get("/", async (request, response) => {
-// //     const tracks = await Track.find();
-// //     response.json(tracks);
-// //   });
+  export default router

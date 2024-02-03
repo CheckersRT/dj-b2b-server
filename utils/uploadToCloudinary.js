@@ -22,7 +22,7 @@ export default async function uploadToCloudinary(trackPath) {
     };
 
     try {
-      // Upload the image
+      // Upload the track
       const result = await cloudinary.v2.uploader.upload(trackPath, options);
       console.log("Result from try catch: ", result);
       return result;

@@ -14,7 +14,7 @@ import Track from "./models/trackSchema.js";
 import uploadTrack from "./routes/uploadTrack.js";
 import saveToDb from "./routes/saveToDb.js";
 import getMetaData from "./routes/getMetaData.js";
-// import isTrackInDb from "./routes/isTrackInDb.js"
+import isTrackInDb from "./routes/isTrackInDb.js"
 
 const app = express();
 const PORT = process.env.PORT || 3030;
@@ -175,37 +175,10 @@ app.post("/getTracksInPlaylist", (request, response) => {
   response.json(playlistObj);
 });
 
-// app.post("/uploadTrack", (request, response) => {
-//   const trackName = request.body.trackName;
-//   const track = getTrackFromJSON(trackName);
-//   const location = track.Location;
-//   const trackPathNoSpace = decodeURI(location).slice(16);
-//   console.log(trackPathNoSpace);
-//   const url = uploadToCloudinary(trackPathNoSpace);
-//   console.log(url);
-
-//   response.json(url);
-// });
-
 app.use("/routes/uploadTrack", uploadTrack);
 app.use("/routes/getMetaData", getMetaData);
 app.use("/routes/saveToDb", saveToDb);
-// app.use("/routes/IsTrackInDb", isTrackInDb)
-
-app.post("/routes/isTrackInDb", async (request, response) => {
-  const id = request.body.id;
-  console.log("ID: ", id);
-  const track = await Track.find({ trackID: id });
-
-  console.log("track from db: ", track);
-
-  if (track.length === 0) {
-    console.log("NO TRACK");
-    response.json({ message: "noTrackInDb" });
-  } else {
-    response.json({ track: track[0] });
-  }
-});
+app.use("/routes/IsTrackInDb", isTrackInDb)
 
 app.get("/", async (request, response) => {
   const tracks = await Track.find();
