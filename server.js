@@ -13,7 +13,10 @@ import getPlaylistsAndCollection from "./routes/getPlaylistsAndCollection.js"
 
 const app = express();
 const PORT = process.env.PORT || 3030;
-app.use(cors());
+app.use(cors({
+  origin: "https://dj-b2b-client.vercel.app",
+  methods: ["GET", "POST"],
+}));
 app.use(
   express.json({
     limit: "50mb",
@@ -28,7 +31,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     // origin: "http://localhost:3000",
-    origin: "https://dj-b2b-client.vercel.app" ,
+    origin: "https://dj-b2b-client.vercel.app",
     methods: ["GET", "POST"],
   },
 });
