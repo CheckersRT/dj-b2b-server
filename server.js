@@ -37,11 +37,11 @@ const io = new Server(server, {
   },
 });
 
-app.use("/api/getPlaylistsAndCollection", getPlaylistsAndCollection)
-app.use("/api/uploadTrack", uploadTrack);
-app.use("/api/getMetaData", getMetaData);
-app.use("/api/saveToDb", saveToDb);
-app.use("/api/IsTrackInDb", isTrackInDb)
+app.use("/routes/getPlaylistsAndCollection", getPlaylistsAndCollection)
+app.use("/routes/uploadTrack", uploadTrack);
+app.use("/routes/getMetaData", getMetaData);
+app.use("/routes/saveToDb", saveToDb);
+app.use("/routes/IsTrackInDb", isTrackInDb)
 app.post("/loadTrack", (request, response) => {
   const fileName = request.body.name;
   console.log(fileName);
