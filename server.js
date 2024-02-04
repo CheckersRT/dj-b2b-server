@@ -12,7 +12,8 @@ import getPlaylistsAndCollection from "./api/getPlaylistsAndCollection.js"
 
 
 const app = express();
-const PORT = process.env.PORT || 3030;
+// const PORT = process.env.PORT || 3030;
+const PORT = "https://dj-b2b-client.vercel.app"
 app.use(cors({
   origin: "https://dj-b2b-client.vercel.app",
   methods: ["GET", "POST"],
