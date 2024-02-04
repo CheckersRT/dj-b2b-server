@@ -1,7 +1,5 @@
 import getTrackFromJSON from "../utils/getTrackFromJSON.js";
 import uploadToCloudinary from "../utils/uploadToCloudinary.js";
-import getMetaData from "../middleware/getMetaData.js"
-import saveToDb from "../utils/saveToDb.js";
 import express from "express"
 
 
@@ -14,9 +12,19 @@ router.post("/", async (request, response) => {
     const location = track.Location;
     const trackPathNoSpace = decodeURI(location).slice(16);
     console.log(trackPathNoSpace);
-    const data = await uploadToCloudinary(trackPathNoSpace);
-    console.log("data from upload function", data);
-    response.json(data)
+
+    try {
+      
+      const data = await uploadToCloudinary(trackPathNoSpace);
+
+      console.log("data from upload function", data);
+      if(data === "No such file or directory") {
+        response.json({error: data})
+      } else response.json(data)
+    } catch (error) {
+      console.log("error from trackupload: ", error)
+      
+    }
   }
   
 //   , (request, response, next) => {

@@ -1,7 +1,17 @@
 import cloudinary from "cloudinary"
+import dotenv from "dotenv";
+
+dotenv.config();
+
+cloudinary.config({ 
+  cloud_name: 'dm1n4kfee', 
+  api_key: process.env.CLOUDINARY_API_KEY, 
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
 
 export default async function uploadToCloudinary(trackPath) {
-
+  
     // Use the uploaded file's name as the asset's public ID and 
     // allow overwriting the asset with new versions
     const options = {
@@ -12,11 +22,13 @@ export default async function uploadToCloudinary(trackPath) {
     };
 
     try {
-      // Upload the image
+      // Upload the track
       const result = await cloudinary.v2.uploader.upload(trackPath, options);
       console.log("Result from try catch: ", result);
       return result;
     } catch (error) {
-      console.error(error);
+      console.error("Error from uploadToCloudinary", error);
+      return "No such file or directory"
     }
+    
 };
