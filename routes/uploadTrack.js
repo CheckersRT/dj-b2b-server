@@ -1,7 +1,5 @@
 import getTrackFromJSON from "../utils/getTrackFromJSON.js";
 import uploadToCloudinary from "../utils/uploadToCloudinary.js";
-import getMetaData from "../middleware/getMetaData.js"
-import saveToDb from "../utils/saveToDb.js";
 import express from "express"
 
 
