@@ -4,11 +4,11 @@ import { Server } from "socket.io";
 import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import uploadTrack from "./api/uploadTrack.js";
-import saveToDb from "./api/saveToDb.js";
-import getMetaData from "./api/getMetaData.js";
-import isTrackInDb from "./api/isTrackInDb.js"
-import getPlaylistsAndCollection from "./api/getPlaylistsAndCollection.js"
+import uploadTrack from "./routes/uploadTrack.js";
+import saveToDb from "./routes/saveToDb.js";
+import getMetaData from "./routes/getMetaData.js";
+import isTrackInDb from "./routes/isTrackInDb.js"
+import getPlaylistsAndCollection from "./routes/getPlaylistsAndCollection.js"
 
 
 const app = express();
