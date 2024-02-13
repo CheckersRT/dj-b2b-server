@@ -22,9 +22,13 @@ export default async function uploadToCloudinary(trackPath) {
       resource_type: "video",
     };
 
+
     try {
       // Upload the track
-      const result = await cloudinary.v2.uploader.upload(trackPath, options);
+      const result = await cloudinary.v2.uploader.upload(
+        // trackPath,
+        "/Users/Checkers/Music/beatport_tracks_2024-01/TurnLightsOn.mp3"
+        , options);
       console.log("Result from try catch: ", result);
       return result;
     } catch (error) {
