@@ -15,7 +15,10 @@ router.post("/", async (request, response) => {
 
     try {
       
-      const data = await uploadToCloudinary(trackPathNoSpace);
+      const data = await uploadToCloudinary(
+        // trackPathNoSpace
+        location
+        );
 
       console.log("data from upload function", data);
       if(data === "No such file or directory") {
