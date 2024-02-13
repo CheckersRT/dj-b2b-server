@@ -12,10 +12,12 @@ import getPlaylistsAndCollection from "./routes/getPlaylistsAndCollection.js"
 
 
 const app = express();
-// const PORT = process.env.PORT || 3030;
-const PORT = 3030
+const PORT = process.env.PORT || 3030;
+
+// const PORT = 3030
 app.use(cors({
-  origin: "https://dj-b2b-client.vercel.app",
+  origin: "http://localhost:3000",
+  // origin: "https://dj-b2b-client.vercel.app",
   methods: ["GET", "POST"],
 }));
 app.use(
@@ -31,8 +33,8 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    // origin: "http://localhost:3000",
-    origin: "https://dj-b2b-client.vercel.app",
+    origin: "http://localhost:3000",
+    // origin: "https://dj-b2b-client.vercel.app",
     methods: ["GET", "POST"],
   },
 });
@@ -88,6 +90,6 @@ app.get("/", (request, response) => {
 
 // const imageUri = "data:" + picture.format + ";base64," + encodedString
 
-server.listen(PORT, () => {
+server.listen(PORT, "0.0.0.0", () => {
   console.log("Server is running on 3030");
 });
