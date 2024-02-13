@@ -17,7 +17,6 @@ router.post("/", async (request, response) => {
       
       const data = await uploadToCloudinary(
         // trackPathNoSpace
-        location
         );
 
       console.log("data from upload function", data);

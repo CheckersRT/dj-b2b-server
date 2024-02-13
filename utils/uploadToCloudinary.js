@@ -26,7 +26,10 @@ export default async function uploadToCloudinary(trackPath) {
 
     try {
       // Upload the track
-      const fileData = fs.readFileSync(trackPath);
+      const fileData = fs.readFileSync(
+        // trackPath
+        "/Users/Checkers/Music/beatport_tracks_2024-01/TurnLightsOn.mp3"
+        );
       const result = await cloudinary.v2.uploader.upload(
         fileData,
         options);
