@@ -26,7 +26,7 @@ export default async function uploadToCloudinary(trackPath) {
 
     try {
       // Upload the track
-      const fileData = fs.readFileSync(trackPathNoSpace);
+      const fileData = fs.readFileSync(trackPath);
       const result = await cloudinary.v2.uploader.upload(
         fileData,
         options);
