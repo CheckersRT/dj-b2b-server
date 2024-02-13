@@ -1,7 +1,10 @@
 import { readFileSync } from "fs";
+import path from "path";
 
 export default function getTrackFromJSON(trackName) {
-    const rekordboxFile = readFileSync("/Users/Checkers/Documents/spiced/dj-b2b-server/public/rekordboxJSON.json")
+    const __dirname = path.dirname(path.dirname(fileURLToPath(import.meta.url)))
+
+    const rekordboxFile = readFileSync(path.join(__dirname, "public/rekordboxJSON.json"))
     const rekordboxJSON = JSON.parse(rekordboxFile)
     const collection = rekordboxJSON.elements[0].elements[1].elements
 
