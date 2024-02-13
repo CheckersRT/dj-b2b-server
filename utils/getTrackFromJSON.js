@@ -1,5 +1,6 @@
 import { readFileSync } from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
 
 export default function getTrackFromJSON(trackName) {
     const __dirname = path.dirname(path.dirname(fileURLToPath(import.meta.url)))
