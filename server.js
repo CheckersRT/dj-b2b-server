@@ -9,6 +9,7 @@ import saveToDb from "./routes/saveToDb.js";
 import getMetaData from "./routes/getMetaData.js";
 import isTrackInDb from "./routes/isTrackInDb.js"
 import getPlaylistsAndCollection from "./routes/getPlaylistsAndCollection.js"
+import uploadMultipleTracks from "./routes/uploadMultipleTracks.js"
 
 
 const app = express();
@@ -41,6 +42,7 @@ const io = new Server(server, {
 
 app.use("/routes/getPlaylistsAndCollection", getPlaylistsAndCollection)
 app.use("/routes/uploadTrack", uploadTrack);
+app.use("/routes/uploadMultipleTracks", uploadMultipleTracks);
 app.use("/routes/getMetaData", getMetaData);
 app.use("/routes/saveToDb", saveToDb);
 app.use("/routes/IsTrackInDb", isTrackInDb)
