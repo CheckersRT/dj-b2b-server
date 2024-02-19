@@ -26,6 +26,7 @@ app.use(
     limit: "50mb",
   })
 );
+app.use(express.static('public'));
 
 
 dotenv.config();
