@@ -9,6 +9,7 @@ import saveToDb from "./routes/saveToDb.js";
 import getMetaData from "./routes/getMetaData.js";
 import isTrackInDb from "./routes/isTrackInDb.js"
 import getPlaylistsAndCollection from "./routes/getPlaylistsAndCollection.js"
+import uploadMultipleTracks from "./routes/uploadMultipleTracks.js"
 
 
 const app = express();
@@ -16,8 +17,8 @@ const PORT = process.env.PORT || 3030;
 
 // const PORT = 3030
 app.use(cors({
-  // origin: "http://localhost:3000",
-  origin: "https://dj-b2b-client.vercel.app",
+  origin: "http://localhost:3000",
+  // origin: "https://dj-b2b-client.vercel.app",
   methods: ["GET", "POST"],
 }));
 app.use(
@@ -25,6 +26,9 @@ app.use(
     limit: "50mb",
   })
 );
+
+
+
 
 dotenv.config();
 mongoose.connect(process.env.MONGODB_URI);
@@ -41,6 +45,7 @@ const io = new Server(server, {
 
 app.use("/routes/getPlaylistsAndCollection", getPlaylistsAndCollection)
 app.use("/routes/uploadTrack", uploadTrack);
+app.use("/routes/uploadMultipleTracks", uploadMultipleTracks);
 app.use("/routes/getMetaData", getMetaData);
 app.use("/routes/saveToDb", saveToDb);
 app.use("/routes/IsTrackInDb", isTrackInDb)
