@@ -3,7 +3,7 @@ import multer from "multer";
 import uploadMultipleToCloudinary from "../utils/uploadMultipleToCloudinary.js";
 import fs from "fs"
 import getMetaData from "../utils/getMetaData.js"
-import createDbData from "../utils/createDBData.js";
+import createDbData from "../utils/createDbData.js";
 import saveToDb from "../utils/saveToDb.js";
 
 const router = express.Router();
