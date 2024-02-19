@@ -1,43 +1,42 @@
 import jsmediatags from "jsmediatags";
-import express from "express"
+import express from "express";
+import multer from "multer";
+import fs from "fs"
+import getMetaData from "../utils/getMetaData.js";
 
-const router = express.Router()
+const router = express.Router();
+const upload = multer();
 
-router.post("/", async (request, response) => {
-    const url = request.body.url
-  console.log(url);
-  jsmediatags.read(url, {
-    onSuccess: function (tag) {
-      const tags = tag.tags;
-      console.log(tag);
-      //Create a buffer, stringify it and format it to a data url.
-      const art = `data:${tags.picture.format};base64,${Buffer.from(
-        tags.picture.data
-      ).toString("base64")}`;
+router.post("/", upload.array("files"), async (request, response) => {
 
-      const metaData = {
-        url: url,
-        artist: tags.artist,
-        album: tags.album,
-        title: tags.title,
-        track: tags.track,
-        art: art,
-      };
-      //   return metaData
+  try {
+    const tracks = request.files;
+    if (!tracks) {
+      response.status(400).json({ message: "Tracks did not reach server" });
+    }
+    
+    const metaDataPromises = tracks.map(async (track) => {
+      const filePath = `public/metaData/${Date.now()}-${track.originalname}`;
+      fs.writeFileSync(filePath, track.buffer);
+      
+      const metaData = await getMetaData(filePath)
+      
+      fs.unlinkSync(filePath)
+      
+      return metaData
+    });
+    const metaDataArray = await Promise.all(metaDataPromises);
+    
+    response
+    .status(200)
+    .json({
+      message: "Success",
+      metaData: metaDataArray,
+    });
+  } catch (error) {
+    console.error("Error in getMetaData route: ", error);
 
-      response.status(200).json({
-        url: request.body.url,
-        artist: tags.artist,
-        album: tags.album,
-        title: tags.title,
-        track: tags.track,
-        art: art,
-      });
-    },
-    onError: function (error) {
-      console.log(":(", error.type, error.info);
-    },
+  }
   });
-});
-
-export default router
+  
+  export default router;

@@ -11,7 +11,7 @@ cloudinary.config({
   secure: true,
 });
 
-export default async function uploadMultipleToCloudinary(file) {
+export default async function uploadMultipleToCloudinary(filePath) {
   // Use the uploaded file's name as the asset's public ID and
   // allow overwriting the asset with new versions
   const options = {
@@ -22,13 +22,13 @@ export default async function uploadMultipleToCloudinary(file) {
   };
 
   try {
-    const filePath = `public/${Date.now()}-${file.originalname}`;
-    fs.writeFileSync(filePath, file.buffer);
+    // const filePath = `public/${Date.now()}-${file.originalname}`;
+    // fs.writeFileSync(filePath, file.buffer);
 
     const result = await cloudinary.v2.uploader.upload(filePath, options);
-    console.log("Result from uploadMultipleToCloudinary: ", result);
+    // console.log("Result from uploadMultipleToCloudinary: ", result);
 
-    fs.unlinkSync(filePath)
+    // fs.unlinkSync(filePath)
 
     return result;
   } catch (error) {

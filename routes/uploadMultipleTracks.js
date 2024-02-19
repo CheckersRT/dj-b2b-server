@@ -1,30 +1,61 @@
-import express from "express"
-import multer from "multer"
-import uploadMultipleToCloudinary from "../utils/uploadMultipleToCloudinary.js"
+import express from "express";
+import multer from "multer";
+import uploadMultipleToCloudinary from "../utils/uploadMultipleToCloudinary.js";
+import fs from "fs"
+import getMetaData from "../utils/getMetaData.js"
+import createDbData from "../utils/createDBData.js";
+import saveToDb from "../utils/saveToDb.js";
 
-const router = express.Router()
-const upload = multer()
+const router = express.Router();
+const upload = multer();
 
 router.post("/", upload.array("files"), async (request, response) => {
+  try {
+    const tracks = request.files;
+    if (!tracks) {
+      response.status(400).json({ message: "Tracks did not reach server" });
+    }
 
-        try {
-            const tracks = request.files
-            console.log("Tracks from router: ", tracks)
+    const uploadPromises = tracks.map(async (track)  => {
+      // temp save the files
+      const filePath = `public/${Date.now()}-${track.originalname}`;
+      fs.writeFileSync(filePath, track.buffer);
 
-            if(!tracks) {
-                response.status(400).json({message: "Tracks did not reach server"})
-            }
+      // get metaData from filePath
+      const metaData = await getMetaData(filePath)
+      //upload to cloudinary
+      const cloudinaryResponse = await uploadMultipleToCloudinary(filePath);
 
-            const uploadPromises = tracks.map(track => uploadMultipleToCloudinary(track));
+      // create database doc object inline with Schema from metaData and upload response
+      const dbData = await createDbData(metaData, cloudinaryResponse)
+      console.log("DbData: ", dbData)
 
-            const resultArray = await Promise.all(uploadPromises);
-            console.log("ResultArray: ", resultArray);
+      // save the tracks in the db
+      const document = await saveToDb(dbData)
 
-            response.status(200).json({message: "Success", urls: resultArray.map(data => data.secure_url)})
+      //remove temp files
+      fs.unlinkSync(filePath)
 
-        } catch (error) {
-            console.error("Error in uploadMultiTrack route: ", error)
-        }
-    })
+      return document
+    });
 
-export default router
+    const resultArray = await Promise.all(uploadPromises);
+    console.log("ResultArray: ", resultArray);
+
+
+    // save data to database
+
+    //
+
+    response
+      .status(200)
+      .json({
+        message: "Success",
+        tracks: resultArray,
+      });
+  } catch (error) {
+    console.error("Error in uploadMultiTrack route: ", error);
+  }
+});
+
+export default router;

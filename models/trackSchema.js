@@ -3,7 +3,7 @@ import mongoose from "mongoose"
 const {Schema} = mongoose
 
 const trackSchema = new Schema({
-    trackID: {type: Number, required: true},
+    trackID: {type: Number, required: false},
     name: {type: String, required: true},
     artist: {type: String, required: true},
     composer: {type: String, required: false},
@@ -14,16 +14,16 @@ const trackSchema = new Schema({
     size: {type: Number, required: true},
     totalTime: {type: Number, required: true},
     discNumber: {type: Number, required: false},
-    trackNumber: {type: Number, required: false},
+    trackNumber: {type: Schema.Types.Mixed, required: false},
     year: {type: Number, required: false},
     bpm: {type: Number, required: true},
     dateAdded: {type: String, required: true},
     bitRate: {type: Number, required: true},
-    sampleRate: {type: Number, required: true},
+    sampleRate: {type: Number, required: false},
     comments: {type: String, required: false},
     playCount: {type: Number, required: false},
     rating: {type: Number, required: false},
-    location: {type: String, required: true},
+    location: {type: String, required: false},
     remixer: {type: String, required: false},
     tonality: {type: String, required: true},
     label: {type: String, required: false},
@@ -31,6 +31,7 @@ const trackSchema = new Schema({
     url: {type: String, required: true},
     publicID: {type: String, required: true},
     waveformURL: {type: String, required: true},
+    coverArt: {type: String, required: false}
 });
 
 
