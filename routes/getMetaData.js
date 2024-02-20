@@ -36,7 +36,7 @@ router.post("/", upload.array("files"), async (request, response) => {
     });
   } catch (error) {
     console.error("Error in getMetaData route: ", error);
-
+    response.status(400).json({error: error})
   }
   });
   
