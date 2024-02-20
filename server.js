@@ -17,8 +17,8 @@ const PORT = process.env.PORT || 3030;
 
 // const PORT = 3030
 app.use(cors({
-  // origin: "http://localhost:3000",
-  origin: "https://dj-b2b-client.vercel.app",
+  origin: "http://localhost:3000",
+  // origin: "https://dj-b2b-client.vercel.app",
   methods: ["GET", "POST"],
 }));
 app.use(
