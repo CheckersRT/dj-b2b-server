@@ -18,7 +18,7 @@ router.post("/", upload.array("files"), async (request, response) => {
 
     const uploadPromises = tracks.map(async (track)  => {
       // temp save the files
-      const filePath = `public/${Date.now()}-${track.originalname}`;
+      const filePath = `public/${track.originalname}`;
       fs.writeFileSync(filePath, track.buffer);
 
       // get metaData from filePath
