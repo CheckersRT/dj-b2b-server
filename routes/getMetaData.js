@@ -3,6 +3,9 @@ import express from "express";
 import multer from "multer";
 import fs from "fs"
 import getMetaData from "../utils/getMetaData.js";
+import path from "path";
+import {fileURLToPath} from "url"
+
 
 const router = express.Router();
 const upload = multer();
@@ -11,13 +14,16 @@ router.post("/", upload.array("files"), async (request, response) => {
 
   try {
     const tracks = request.files;
+    console.log("tracks:", tracks)
     if (!tracks) {
       response.status(400).json({ message: "Tracks did not reach server" });
     }
+
+    const __dirname = path.dirname(path.dirname(fileURLToPath(import.meta.url)))
+    console.log("dirname: ", __dirname)
     
     const metaDataPromises = tracks.map(async (track) => {
-      // const filePath = `/metaData/${Date.now()}-${track.originalname}`;
-      const filePath = `/metaData/${Date.now()}-${track.originalname}`;
+      const filePath = path.join(__dirname, "public", "metaData", `${Date.now()}-${track.originalname}`);
       fs.writeFileSync(filePath, track.buffer);
       
       const metaData = await getMetaData(filePath)
