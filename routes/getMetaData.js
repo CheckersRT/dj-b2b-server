@@ -23,7 +23,10 @@ router.post("/", upload.array("files"), async (request, response) => {
     console.log("dirname: ", __dirname)
     
     const metaDataPromises = tracks.map(async (track) => {
-      const filePath = path.join(__dirname, "public", "metaData", `${Date.now()}-${track.originalname}`);
+      // filePath for development
+      // const filePath = path.join(__dirname, "public", "metaData", `${Date.now()}-${track.originalname}`);
+      // filePath for production
+      const filePath = `/metaData/${Date.now()}-${track.originalname}`
       fs.writeFileSync(filePath, track.buffer);
       
       const metaData = await getMetaData(filePath)
