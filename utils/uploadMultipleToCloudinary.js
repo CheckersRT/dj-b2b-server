@@ -19,6 +19,7 @@ export default async function uploadMultipleToCloudinary(filePath) {
     unique_filename: false,
     overwrite: false,
     resource_type: "video",
+    folder: "DJ b2b",
   };
 
   try {
